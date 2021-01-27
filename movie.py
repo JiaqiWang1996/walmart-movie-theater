@@ -80,18 +80,22 @@ class MovieTheater:
 
     def greedy_assignment(self):
         for num, reservation in enumerate(self.reservations):
-            # print(reservation)
+            print(reservation)
             r_size = int(reservation[1])
             min_num_buffer = math.inf
             br, bc = -1, -1
             for i in range(len(self.seats)):
-                for j in range(len(self.seats[0]) - r_size):
+                for j in range(len(self.seats[0]) - r_size + 1):
+                    print(self.seats[i][j])
                     if self.seats[i][j] != '.':
                         continue
                     num_buffer = self.count_buffer(i, j, r_size)
                     if num_buffer < min_num_buffer:
                         br, bc = i, j
                         min_num_buffer = num_buffer
+                
+            if br == -1 and bc == -1:
+                continue
             assignment = [(br, bc + x) for x in range(r_size)]
             # print(assignment)
             self.reserve_seats(assignment, str(num + 1))
