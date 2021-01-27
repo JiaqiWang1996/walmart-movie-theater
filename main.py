@@ -29,7 +29,9 @@ def main(argv):
             with open(outputfile, "w") as out:
                 lines = f.readlines()
                 myMovie = MovieTheater(lines)
-                out.write(str(lines))
+                myMovie.greedy_assignment()
+
+                out.write(myMovie.output())
     except OSError:
         print("Could not open/read file:", inputfile)
         sys.exit()

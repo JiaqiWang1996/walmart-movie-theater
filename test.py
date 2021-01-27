@@ -34,6 +34,11 @@ class TestMovie(unittest.TestCase):
             output = myMovie.output()
             lines = output.split("\n")
             self.assertEqual(len(lines), i, "There Should only be %d output line/s" % i)
+
+    def test_buf_count_top_left(self):
+        myMovie = MovieTheater([])
+        self.assertEqual(myMovie.count_buffer(0,0,2), 3, "Top Left len 2 should create 3 buffer")
+        self.assertEqual(myMovie.count_buffer(1,1,2), 6, "Middle len 2 should create 6 buffer")
     
 
 if __name__ == '__main__':

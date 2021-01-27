@@ -1,3 +1,4 @@
+import math
 
 
 class MovieTheater:
@@ -8,12 +9,98 @@ class MovieTheater:
         self.seats = [['s'] * 20 for _ in range(10)]
         self.reservations = [r.split() for r in reservations if len(r)]
 
-    def printr(self):
-        print(self.reservations)
+    def inBounds(self, i, j):
+        return 0 <= i < len(self.seats) and 0 <= j < len(self.seats[0])
+
+    # Return the amount of buffer that would be created with adding seat reservations
+    # Return math.inf if the seat reservation can't fit there
+
+    def count_buffer(self, i, j, r_size):
+        count = 0
+        # left
+        for k in range(1, 4):
+            if self.inBounds(i, j - k):
+                if self.seats[i][j-k] == 's':
+                    count += 1
+                elif self.seats[i][j-k] != 'b':
+                    return math.inf
+
+        # top
+        for k in range(r_size):
+            if self.inBounds(i - 1, j + k):
+                if self.seats[i - 1][j + k] == 's':
+                    count += 1
+                elif self.seats[i - 1][j + k] != 'b':
+                    return math.inf
+        # bot
+        for k in range(r_size):
+            if self.inBounds(i + 1, j + k):
+                if self.seats[i + 1][j + k] == 's':
+                    count += 1
+                elif self.seats[i + 1][j + k] != 'b':
+                    return math.inf
+        # right
+        for k in range(3):
+            if self.inBounds(i, j + r_size + k):
+                if self.seats[i][j+r_size + k] == 's':
+                    count += 1
+                elif self.seats[i][j+r_size + k] != 'b':
+                    return math.inf
+        return count
+
+    # marks the 2d array where the seats are taken with the token
+
+    def reserve_seats(self, seats, token):
+        i, j = seats[0]
+        r_size = len(seats)
+        # left
+        for k in range(1, 4):
+            if self.inBounds(i, j - k):
+                self.seats[i][j-k] = 'b'
+        # top
+        for k in range(r_size):
+            if self.inBounds(i - 1, j + k):
+                self.seats[i - 1][j + k] = 'b'
+        # bot
+        for k in range(r_size):
+            if self.inBounds(i + 1, j + k):
+                self.seats[i + 1][j + k] = 'b'
+        # right
+        for k in range(3):
+            if self.inBounds(i, j + r_size + k):
+                self.seats[i][j+r_size + k] = 'b'
+    
+        # fill in the taken seats with the token
+        for seat in seats:
+            x, y = seat
+            self.seats[x][y] = token
+
+    # Assigns reservations so that they create the least amount of buffer space
+
+    def greedy_assignment(self):
+        for num, reservation in enumerate(self.reservations):
+            print(reservation)
+            r_size = int(reservation[1])
+            min_num_buffer = math.inf
+            br, bc = -1, -1
+            for i in range(len(self.seats)):
+                for j in range(len(self.seats[0]) - r_size):
+                    if self.seats[i][j] != 's':
+                        continue
+                    num_buffer = self.count_buffer(i, j, r_size)
+                    if num_buffer < min_num_buffer:
+                        br, bc = i, j
+                        min_num_buffer = num_buffer
+            assignment = [(br, bc + x) for x in range(r_size)]
+            print(assignment)
+            self.reserve_seats(assignment, str(num))
+            self.assignments.append(assignment)
+            print(self.__str__())
+        return
 
     # Returns the string of the seat assignments in the requested format
     def output(self):
-        return ""
+        return str(self.assignments)
 
     def __str__(self):
         s = "\t[[     SCREEN     ]]\n\t--------------------\n"
