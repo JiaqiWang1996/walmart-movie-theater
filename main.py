@@ -11,7 +11,7 @@ def main(argv):
     outputfile = ""
 
     try:
-        opts, args = getopt.getopt(argv, "hi:o:", ["ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hti:o:", ["ifile=", "ofile="])
     except getopt.GetoptError:
         print('./'+os.path.basename(__file__)+' -i <inputfile> -o <outputfile>')
         sys.exit(2)
@@ -19,6 +19,17 @@ def main(argv):
         if opt == '-h':
             print('./'+os.path.basename(__file__)+' -i <inputfile> -o <outputfile>')
             sys.exit()
+        elif opt in ("-t"):
+            myMovie = MovieTheater([])
+            while True:
+                n = input("Enter reservation size or q to quit: ")
+                if n == 'q':
+                    sys.exit()
+                if n.isnumeric():
+                    print(myMovie.greedy_add_reservation(int(n)))
+                else:
+                    print("try again D:")
+
         elif opt in ("-i", "--ifile"):
             inputfile = arg
         elif opt in ("-o", "--ofile"):
@@ -30,7 +41,7 @@ def main(argv):
                 lines = f.readlines()
                 myMovie = MovieTheater(lines)
                 myMovie.greedy_assignment()
-
+                print(myMovie)
                 out.write(myMovie.output())
     except OSError:
         print("Could not open/read file:", inputfile)

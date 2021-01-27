@@ -1,5 +1,5 @@
 import math
-
+from random import randint
 
 class MovieTheater:
 
@@ -49,7 +49,7 @@ class MovieTheater:
                     return math.inf
         return count
 
-    # marks the 2d array where the seats are taken with the token
+    # marks the 2d array where the seats are taken with the token and marks buffers
 
     def reserve_seats(self, seats, token):
         i, j = seats[0]
@@ -80,13 +80,12 @@ class MovieTheater:
 
     def greedy_assignment(self):
         for num, reservation in enumerate(self.reservations):
-            print(reservation)
+            # print(reservation)
             r_size = int(reservation[1])
             min_num_buffer = math.inf
             br, bc = -1, -1
             for i in range(len(self.seats)):
                 for j in range(len(self.seats[0]) - r_size + 1):
-                    print(self.seats[i][j])
                     if self.seats[i][j] != '.':
                         continue
                     num_buffer = self.count_buffer(i, j, r_size)
@@ -95,6 +94,7 @@ class MovieTheater:
                         min_num_buffer = num_buffer
                 
             if br == -1 and bc == -1:
+                assignment.append("Can't fufill reservation")
                 continue
             assignment = [(br, bc + x) for x in range(r_size)]
             # print(assignment)
@@ -102,6 +102,26 @@ class MovieTheater:
             self.assignments.append(assignment)
         return
 
+    def greedy_add_reservation(self, r_size):
+
+        min_num_buffer = math.inf
+        br, bc = -1, -1
+        for i in range(len(self.seats)):
+            for j in range(len(self.seats[0]) - r_size + 1):
+                if self.seats[i][j] != '.':
+                    continue
+                num_buffer = self.count_buffer(i, j, r_size)
+                if num_buffer < min_num_buffer:
+                    br, bc = i, j
+                    min_num_buffer = num_buffer
+            
+        if br == -1 and bc == -1:
+            return "Can't fufill reservation"
+
+        assignment = [(br, bc + x) for x in range(r_size)]
+        self.reserve_seats(assignment, chr(65 + randint(0,25)))
+        return "R%03d " % (i+1) + ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]) + "\n" + self.__str__()
+    
     # Returns the string of the seat assignments in the requested format
     def output(self):
         s = []

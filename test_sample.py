@@ -29,7 +29,7 @@ def test_x_reservation_1_seat():
         assert m.output().count('\n') == k - 1
 
 def test_full_seats():
-    m = MovieTheater(["R%03d 20" % x for x in range(1,5)])
+    m = MovieTheater(["R%03d 20" % x for x in range(1,6)])
     m.greedy_assignment()
     print(m)
     print(m.output())
