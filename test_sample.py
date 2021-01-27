@@ -2,7 +2,7 @@
 from movie import MovieTheater
 
 def test_no_reservations():
-    m = MovieTheater([])
+    m = MovieTheater()
     m.greedy_assignment()
     assert m.output() == ''
 

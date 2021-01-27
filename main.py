@@ -20,7 +20,7 @@ def main(argv):
             print('./'+os.path.basename(__file__)+' -i <inputfile>')
             sys.exit()
         elif opt in ("-t"):
-            myMovie = MovieTheater([])
+            myMovie = MovieTheater()
             while True:
                 n = input("Enter reservation size or q to quit: ")
                 if n == 'q':
@@ -32,6 +32,7 @@ def main(argv):
 
         elif opt in ("-i", "--ifile"):
             inputfile = arg
+            # Create a file with the same path but with the .out extension
             outputfile = os.path.splitext(arg)[0] + ".out"
             print("output file:", outputfile)
 

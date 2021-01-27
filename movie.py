@@ -4,7 +4,7 @@ from random import randint
 
 class MovieTheater:
 
-    def __init__(self, reservations):
+    def __init__(self, reservations=[]):
         self.assignments = []
         self.seats = [['.'] * 20 for _ in range(10)]
         self.reservations = [r.split() for r in reservations if len(r)]
@@ -132,6 +132,7 @@ class MovieTheater:
                          ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]))
         return "\n".join(s)
 
+    # Returs a string representation of the movie theater
     def __str__(self):
         s = "\t[[     SCREEN     ]]\n\t--------------------\n"
 
