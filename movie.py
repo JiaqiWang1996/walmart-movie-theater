@@ -115,18 +115,18 @@ class MovieTheater:
                     min_num_buffer = num_buffer
 
         if br == -1 and bc == -1:
-            return "cannot fufill reservation"
+            return "cannot fulfill reservation"
 
         assignment = [(br, bc + x) for x in range(r_size)]
         self.reserve_seats(assignment, chr(65 + randint(0, 25)))
-        return "R%03d " % (i+1) + ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]) + "\n" + self.__str__()
+        return "R%03d " % (1) + ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]) + "\n" + self.__str__()
 
     # Returns the string of the seat assignments in the requested format
     def output(self):
         s = []
         for i, assignment in enumerate(self.assignments):
             if assignment[0][0] == -1:
-                s.append("R%03d " % (i+1) + "cannot fufill reservation")
+                s.append("R%03d " % (i+1) + "cannot fulfill reservation")
             else:
                 s.append("R%03d " % (i+1) +
                          ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]))

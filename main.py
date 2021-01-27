@@ -11,13 +11,13 @@ def main(argv):
     outputfile = ""
 
     try:
-        opts, args = getopt.getopt(argv, "hti:o:", ["ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hti:", ["ifile="])
     except getopt.GetoptError:
-        print('./'+os.path.basename(__file__)+' -i <inputfile> -o <outputfile>')
+        print('./'+os.path.basename(__file__)+' -i <inputfile>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print('./'+os.path.basename(__file__)+' -i <inputfile> -o <outputfile>')
+            print('./'+os.path.basename(__file__)+' -i <inputfile>')
             sys.exit()
         elif opt in ("-t"):
             myMovie = MovieTheater([])
@@ -32,8 +32,9 @@ def main(argv):
 
         elif opt in ("-i", "--ifile"):
             inputfile = arg
-        elif opt in ("-o", "--ofile"):
-            outputfile = arg
+            outputfile = os.path.splitext(arg)[0] + ".out"
+            print("output file:", outputfile)
+
 
     try:
         with open(inputfile, "r") as f:
