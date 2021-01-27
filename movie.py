@@ -4,9 +4,9 @@ from random import randint
 
 class MovieTheater:
 
-    def __init__(self, reservations=[]):
+    def __init__(self, reservations=[], rows=10, cols=20):
         self.assignments = []
-        self.seats = [['.'] * 20 for _ in range(10)]
+        self.seats = [['.'] * cols for _ in range(rows)]
         self.reservations = [r.split() for r in reservations if len(r)]
 
     def inBounds(self, i, j):
