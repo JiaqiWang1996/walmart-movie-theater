@@ -12,3 +12,5 @@ How to run tests:
 * The reservation requests that are first have priority
 * All of the reservations are recieved at the same time so that the algorithm can strategically fit the customers.
 * All seats have the same value and customers only care about having a seat
+* The number of reservations will be less than 1000
+* Each reservation will have 0 < seats <= 20 

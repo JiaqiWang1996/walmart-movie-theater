@@ -3,10 +3,11 @@ import math
 
 class MovieTheater:
 
-    assignments = []
+    
 
     def __init__(self, reservations):
-        self.seats = [['s'] * 20 for _ in range(10)]
+        self.assignments = []
+        self.seats = [['.'] * 20 for _ in range(10)]
         self.reservations = [r.split() for r in reservations if len(r)]
 
     def inBounds(self, i, j):
@@ -20,31 +21,31 @@ class MovieTheater:
         # left
         for k in range(1, 4):
             if self.inBounds(i, j - k):
-                if self.seats[i][j-k] == 's':
+                if self.seats[i][j-k] == '.':
                     count += 1
-                elif self.seats[i][j-k] != 'b':
+                elif self.seats[i][j-k] != '*':
                     return math.inf
 
         # top
         for k in range(r_size):
             if self.inBounds(i - 1, j + k):
-                if self.seats[i - 1][j + k] == 's':
+                if self.seats[i - 1][j + k] == '.':
                     count += 1
-                elif self.seats[i - 1][j + k] != 'b':
+                elif self.seats[i - 1][j + k] != '*':
                     return math.inf
         # bot
         for k in range(r_size):
             if self.inBounds(i + 1, j + k):
-                if self.seats[i + 1][j + k] == 's':
+                if self.seats[i + 1][j + k] == '.':
                     count += 1
-                elif self.seats[i + 1][j + k] != 'b':
+                elif self.seats[i + 1][j + k] != '*':
                     return math.inf
         # right
         for k in range(3):
             if self.inBounds(i, j + r_size + k):
-                if self.seats[i][j+r_size + k] == 's':
+                if self.seats[i][j+r_size + k] == '.':
                     count += 1
-                elif self.seats[i][j+r_size + k] != 'b':
+                elif self.seats[i][j+r_size + k] != '*':
                     return math.inf
         return count
 
@@ -56,20 +57,20 @@ class MovieTheater:
         # left
         for k in range(1, 4):
             if self.inBounds(i, j - k):
-                self.seats[i][j-k] = 'b'
+                self.seats[i][j-k] = '*'
         # top
         for k in range(r_size):
             if self.inBounds(i - 1, j + k):
-                self.seats[i - 1][j + k] = 'b'
+                self.seats[i - 1][j + k] = '*'
         # bot
         for k in range(r_size):
             if self.inBounds(i + 1, j + k):
-                self.seats[i + 1][j + k] = 'b'
+                self.seats[i + 1][j + k] = '*'
         # right
         for k in range(3):
             if self.inBounds(i, j + r_size + k):
-                self.seats[i][j+r_size + k] = 'b'
-    
+                self.seats[i][j+r_size + k] = '*'
+
         # fill in the taken seats with the token
         for seat in seats:
             x, y = seat
@@ -79,32 +80,36 @@ class MovieTheater:
 
     def greedy_assignment(self):
         for num, reservation in enumerate(self.reservations):
-            print(reservation)
+            # print(reservation)
             r_size = int(reservation[1])
             min_num_buffer = math.inf
             br, bc = -1, -1
             for i in range(len(self.seats)):
                 for j in range(len(self.seats[0]) - r_size):
-                    if self.seats[i][j] != 's':
+                    if self.seats[i][j] != '.':
                         continue
                     num_buffer = self.count_buffer(i, j, r_size)
                     if num_buffer < min_num_buffer:
                         br, bc = i, j
                         min_num_buffer = num_buffer
             assignment = [(br, bc + x) for x in range(r_size)]
-            print(assignment)
-            self.reserve_seats(assignment, str(num))
+            # print(assignment)
+            self.reserve_seats(assignment, str(num + 1))
             self.assignments.append(assignment)
-            print(self.__str__())
         return
 
     # Returns the string of the seat assignments in the requested format
     def output(self):
-        return str(self.assignments)
+        s = []
+        for i, assignment in enumerate(self.assignments):
+            s.append("R%03d " % (i+1) +
+                     ",".join([chr(65 + x) + str(y + 1) for x, y in assignment]))
+        return "\n".join(s)
 
     def __str__(self):
         s = "\t[[     SCREEN     ]]\n\t--------------------\n"
 
         for i, row in enumerate(self.seats):
             s += chr(65+i) + "\t" + "".join(row) + "\n"
+        s += "\t1       ...      20"
         return s
